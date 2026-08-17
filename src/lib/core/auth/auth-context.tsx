@@ -1,12 +1,12 @@
-import { createContext, useContext, useState, useMemo, useCallback } from 'react';
-import type { ReactNode } from 'react';
-
-interface Usuario {
+import { createContext, useContext, useState } from 'react';
+import type {ReactNode} from 'react';
+export interface Usuario {
   idUsuarioApp: string;
-  idEmpleado: string;
+  idEmpleado: string | null;
   nombre: string;
   perfil: string;
   useremail: string;
+  especialidad?: string;
   idEmpresa?: string;
 }
 
@@ -15,48 +15,52 @@ interface AuthContextType {
   token: string | null;
   login: (token: string, usuario: Usuario) => void;
   logout: () => void;
-  estaLogueado: boolean;
+  isLogged: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
-  const [usuario, setUsuario] = useState<Usuario | null>(() => {
-    const guardado = localStorage.getItem('usuario');
-    return guardado ? JSON.parse(guardado) : null;
-  });
+function cargarDesdeStorage<T>(key: string): T | null {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [usuario, setUsuario] = useState<Usuario | null>(
+    () => cargarDesdeStorage<Usuario>('usuario')
+  );
+  
   const [token, setToken] = useState<string | null>(
     () => localStorage.getItem('token')
   );
 
-  const login = useCallback((newToken: string, newUsuario: Usuario) => {
+  const login = (newToken: string, newUsuario: Usuario) => {
     localStorage.setItem('token', newToken);
     localStorage.setItem('usuario', JSON.stringify(newUsuario));
     setToken(newToken);
     setUsuario(newUsuario);
-  }, []);
+  };
 
-  const logout = useCallback(() => {
+  const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
     setToken(null);
     setUsuario(null);
-  }, []);
-
-  const value = useMemo(
-    () => ({ usuario, token, login, logout, estaLogueado: !!token }),
-    [usuario, token, login, logout]
-  );
+  };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ usuario, token, login, logout, isLogged: !!token }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export const useAuth = () => {
+export function useAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth debe usarse dentro de AuthProvider');
   return ctx;
-};
+}

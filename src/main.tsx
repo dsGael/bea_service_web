@@ -3,14 +3,14 @@ import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from './lib/core/auth/auth-context';
 import App from './App';
 import './index.css';
+import { AuthProvider } from './lib/core/auth/auth-context';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60, // 1 minuto — evita refetches innecesarios al cambiar de tab
+      staleTime: 1000 * 80,  // 1 minuto — evita refetches innecesarios
       retry: 1,
     },
   },
