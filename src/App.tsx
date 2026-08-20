@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './lib/features/auth/login-page';
 import { ProtectedRoute } from './lib/core/router/protected-route';
+import { TicketsListPage } from './lib/features/tickets/pages/TicketsListPage';
 
 // Placeholders — los reemplazas conforme construyas cada módulo
 const TicketsPage = () => <div className="p-6">Tickets — pendiente</div>;
@@ -13,7 +14,8 @@ export default function App() {
       
       <Route element={<ProtectedRoute />}>
         <Route index element={<Navigate to="/tickets" replace />} />
-        <Route path="/tickets" element={<TicketsPage />} />
+        <Route path="/tickets" element={<TicketsListPage />} />
+        {/* <Route path="/tickets/:id" element={<TicketDetailPage />} /> */}
         <Route path="/checador" element={<ChecadorPage />} />
       </Route>
       
