@@ -15,7 +15,9 @@ export default function App() {
       <Route element={<ProtectedRoute />}>
         <Route index element={<Navigate to="/tickets" replace />} />
         <Route path="/tickets" element={<TicketsListPage />} />
-        {/* <Route path="/tickets/:id" element={<TicketDetailPage />} /> */}
+        
+        <Route path="/tickets" element={<TicketsListPage />} />
+        <Route path="/tickets/:id" element={<TicketsListPage />} />
         <Route path="/checador" element={<ChecadorPage />} />
       </Route>
       

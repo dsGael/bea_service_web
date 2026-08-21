@@ -1,11 +1,16 @@
 import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { TicketTable } from '../components/TicketTable';
 import { ESTADO_IDS } from '../constants';
 import { Loader2 } from 'lucide-react';
 import { useTickets } from '../hooks/hooks';
 import { TicketFilters } from '../components/TicketFIlters';
+import { TicketDetailSheet } from '../components/TicketDetailSheet';
 
 export function TicketsListPage() {
+  const { id } = useParams<{ id?: string }>();
+  const navigate = useNavigate();
+
   const [idestado, setIdestado] = useState<string | undefined>(ESTADO_IDS.VALIDACION_MC);
   const [page, setPage] = useState(1);
 
@@ -54,6 +59,12 @@ export function TicketsListPage() {
           </div>
         </>
       )}
+
+      {/* Sheet controlado por la URL: abierto si hay :id, cerrado si no */}
+      <TicketDetailSheet
+        ticketId={id ?? null}
+        onClose={() => navigate('/tickets')}
+      />
     </div>
   );
 }

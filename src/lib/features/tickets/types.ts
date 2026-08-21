@@ -1,11 +1,24 @@
-// Reflejan el objeto Prisma real que regresa bin_ticket.findMany con TICKET_INCLUDES.
-// No hay DTO de respuesta en el backend, así que tipamos el shape crudo.
+// ── Sub-catálogos (camelCase, tal cual vienen anidados) ──
 
-export interface CatEstadoR {
-  idestado: string;
-  nombre: string;
+export interface CatFalla {
+  idFalla: string;
+  idDispositivo?: string | null;
+  nombre?: string | null;
+  falla?: string | null;
+  descripcionFalla?: string | null;
 }
 
+export interface CatAutobus {
+  idAutobus: string;
+  numeroEconomico?: string | null;
+  idRuta?: string | null;
+  numeroSerie?: string | null;
+}
+
+export interface CatPrioridad {
+  idPrioridad: string;
+  nombre?: string | null; 
+}
 
 export interface EstadoRelacion {
   idEstadoR: string;
@@ -17,86 +30,159 @@ export interface EstadoRelacion {
 }
 
 export interface CatEmpleado {
-  idempleado: string;
+  idEmpleado: string;
+  numEmpleado?: number | null;
   nombre: string;
+  celular?: string | null;
+  puesto?: string | null;
+  foto?: string | null;
 }
 
 export interface UsuarioApp {
   idUsuarioApp: string;
+  especialidad?: string | null;
   idEmpleado: string;
+  perfil?: string | null;
+  activo?: boolean;
+  useremail?: string | null;
   cat_empleados?: CatEmpleado | null;
 }
 
-export interface CatAutobus {
-  idautobus: string;
-  numeroeconomico?: string | null;
-}
-
-export interface CatFalla {
-  idfalla: string;
+export interface CatDispositivoT {
+  idDispositivoT: string;
   nombre?: string | null;
   descripcion?: string | null;
-}
-
-export interface CatRuta {
-  idruta: string;
-  nombre?: string | null;
-}
-
-export interface CatPrioridad {
-  idprioridad: string;
-  nombre?: string | null;
+  tipo?: string | null;
+  requiereSerie?: boolean;
 }
 
 export interface CatDispositivo {
-  iddispositivo: string;
-  nombre?: string | null;
+  idDispositivo: string;
+  idDispositivoT?: string | null;
+  numeroSerie?: string | null;
+  idAutobus?: string | null;
+  comentarios?: string | null;
 }
 
-export interface CatDispositivoT {
-  iddispositivot: string;
+export interface CatDiagnostico {
+  idDiagnostico: string;
+  idDispositivoT?: string | null;
+  idFalla?: string | null;
+  nombreDispositivo?: string | null;
+  fallaNombre?: string | null;
+  diagnostico?: string | null;
+  reparacion?: string | null;
+  tiempoReparacionHoras?: number | null;
+  creadoPor?: string | null;
+  fechaCreacion?: string | null;
+  modificadoPor?: string | null;
+  fechaModificacion?: string | null;
+}
+
+export interface CatRuta {
+  idRuta: string;
   nombre?: string | null;
 }
 
 export interface CatEmpresa {
-  idempresa: string;
+  idEmpresa: string;
   nombre?: string | null;
+  acronimo?: string | null;
 }
 
-// bin_ticket_detail y su cadena de includes — tipado laxo por ahora,
-// lo afinamos cuando construyamos la vista de detalle
+export interface CatCategoria {
+  idCategoria: string;
+  nombre?: string | null;
+  descripcion?: string | null;
+}
+
+export interface SolicitudRefaccion {
+  [key: string]: unknown; // lo tipamos fino cuando toquemos Almacén
+}
+
+// ── bin_ticket_detail: cada intervención/reparación ──
+
 export interface BinTicketDetail {
-  id: string;
+  idDetalle: string;
+  idTicket: string;
+  fechaHora: string;
+  folio: string;
+  idAutobus?: string | null;
+  numeroeconomico?: string | null;
+  idRuta?: string | null;
+  idDispositivo?: string | null;
+  idDispositivoT?: string | null;
+  idFalla?: string | null;
+  idCategoria?: string | null;
+  idPrioridad?: string | null;
+  idEstado?: string | null;
+  idTecnico?: string | null;
+
+  Diagnostico?: string | null; // FK -> cat_diagnostico.idDiagnostico
+  Reparacion?: string | null;  // FK -> cat_reparacion.idReparacion (a confirmar)
+  comentarios?: string | null;
+  areatrabajo?: string | null;
+
+  imagen1: string[];
+  video: string[];
+
+  fechaResolucion?: string | null;
+  creadoPor?: string | null;
+  fechaCreacion: string;
+
   cat_falla?: CatFalla | null;
-  cat_diagnostico?: unknown;
+  cat_diagnostico?: CatDiagnostico | null;
+  cat_reparacion?: CatReparacion | null; // pendiente de confirmar shape
   cat_autobus?: CatAutobus | null;
-  cat_categoria?: unknown;
-  cat_estado_r?: CatEstadoR | null;
+  cat_categoria?: CatCategoria | null;
+  cat_estado_r?: EstadoRelacion | null;
   cat_dispositivo?: CatDispositivo | null;
   cat_dispositivo_t?: CatDispositivoT | null;
   cat_prioridad?: CatPrioridad | null;
-  solicitud_refaccion?: unknown[];
-  [key: string]: unknown; // por si hay campos que aún no mapeamos
+  solicitud_refaccion?: SolicitudRefaccion[];
 }
+
+export interface CatReparacion {
+  idReparacion: string;
+  reparacion?: string | null;
+  // agrega aquí los demás campos cuando confirmes el shape real del include
+}
+
+// ── bin_ticket raíz ──
 
 export interface BinTicket {
   idticket: string;
-  folio: string;
-  numeroeconomico?: string | null;
-  comentarios?: string | null;
-  fechacreacion: string;
+  fecha?: string | null;
   tiporeparacion?: string | null;
-
-  idestado: string;
+  folio: string;
   idautobus?: string | null;
-  idtecnico?: string | null;
-  idfalla?: string | null;
+  numeroeconomico?: string | null;
   idruta?: string | null;
+  idoperador?: string | null;
+  nombreoperador?: string | null;
+  iddispositivo?: string | null;
+  iddispositivot?: string | null;
+  idfalla?: string | null;
+  idcategoria?: string | null;
+  idprioridad?: string | null;
+  idestado: string;
+  idtecnico?: string | null;
+  comentarios?: string | null;
+  areatrabajo?: string | null;
+  descripcion?: string | null;
+  fecharesolucion?: string | null;
+  fechacreacion: string;
+  fechamodificacion?: string | null;
+  fechareportecliente?: string | null;
+  num_folio?: number | null;
+
+  imagenfalla1: string[];
+  video: string[];
 
   cat_falla?: CatFalla | null;
   cat_autobus?: CatAutobus | null;
   cat_prioridad?: CatPrioridad | null;
-  estado?: EstadoRelacion | null; // ya es el objeto final, sin anidar más
+  estado?: EstadoRelacion | null;
   cat_tecnicos?: UsuarioApp | null;
   cat_dispositivo_t?: CatDispositivoT | null;
   cat_dispositivo?: CatDispositivo | null;
@@ -130,4 +216,9 @@ export interface ListarTicketsResponse {
     limit: number;
     totalPages: number;
   };
+}
+
+export interface CatRuta {
+  idruta: string;
+  nombre?: string | null;
 }

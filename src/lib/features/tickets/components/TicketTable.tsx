@@ -30,7 +30,7 @@ export function TicketTable({ tickets }: { tickets: BinTicket[] }) {
         <tbody className="divide-y">
           {tickets.map((t) => {
             const nombreTecnico = t.cat_tecnicos?.cat_empleados?.nombre ?? '—';
-            const fallaTexto = t.cat_falla?.nombre ?? t.cat_falla?.descripcion ?? '—';
+            const fallaTexto = t.cat_falla?.nombre ?? t.cat_falla?.falla ?? '—';
 
             return (
               <tr
@@ -39,7 +39,7 @@ export function TicketTable({ tickets }: { tickets: BinTicket[] }) {
                 className="cursor-pointer hover:bg-muted/40 transition-colors"
               >
                 <td className="px-4 py-3 font-mono font-medium">{t.folio}</td>
-                <td className="px-4 py-3">{t.numeroeconomico ?? t.cat_autobus?.numeroeconomico ?? '—'}</td>
+                <td className="px-4 py-3">{t.numeroeconomico ?? t.cat_autobus?.numeroEconomico ?? '—'}</td>
                 <td className="max-w-xs truncate px-4 py-3">{fallaTexto}</td>
                 <td className="px-4 py-3">{nombreTecnico}</td>
                 <td className="px-4 py-3">

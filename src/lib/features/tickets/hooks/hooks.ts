@@ -10,3 +10,11 @@ export function useTickets(params: ListarTicketsParams) {
     staleTime: 30_000,
   });
 }
+
+export function useTicketDetail(id: string) {
+  return useQuery({
+    queryKey: ticketsKeys.detail(id),
+    queryFn: () => ticketsApi.obtenerDetalle(id),
+    enabled: !!id,
+  });
+}
