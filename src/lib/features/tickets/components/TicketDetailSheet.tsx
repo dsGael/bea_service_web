@@ -10,7 +10,7 @@ interface Props {
   onClose: () => void;
 }
 
-export function TicketDetailSheet({ ticketId, onClose }: Props) {
+export function TicketDetailSheet({ ticketId, onClose }: Readonly<Props>) {
   const isOpen = !!ticketId;
 
   return (
@@ -22,7 +22,7 @@ export function TicketDetailSheet({ ticketId, onClose }: Props) {
   );
 }
 
-function TicketDetailContent({ ticketId }: { ticketId: string }) {
+function TicketDetailContent({ ticketId }: Readonly<{ ticketId: string }>) {
   const { data: ticket, isLoading, isError } = useTicketDetail(ticketId);
 
   if (isLoading) {
@@ -37,7 +37,7 @@ function TicketDetailContent({ ticketId }: { ticketId: string }) {
     return <div className="py-6 text-destructive">No se pudo cargar el ticket.</div>;
   }
 
-  const detalle = ticket.bin_ticket_detail?.[ticket.bin_ticket_detail.length - 1];
+  const detalle = ticket.bin_ticket_detail?.at(-1);
   const nombreTecnico = ticket.cat_tecnicos?.cat_empleados?.nombre ?? '—';
   const nombreFalla = ticket.cat_falla?.nombre ?? ticket.cat_falla?.falla ?? '—';
   const unidad = ticket.numeroeconomico ?? ticket.cat_autobus?.numeroEconomico ?? '—';

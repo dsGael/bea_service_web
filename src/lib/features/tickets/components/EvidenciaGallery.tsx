@@ -7,7 +7,7 @@ function esVideo(url: string) {
   return /\.(mp4|mov|webm|avi)(\?|$)/i.test(url);
 }
 
-export function EvidenciaGallery({ titulo, urls }: Props) {
+export function EvidenciaGallery({ titulo, urls }: Readonly<Props>) {
   if (urls.length === 0) {
     return (
       <div>
