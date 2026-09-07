@@ -3,9 +3,10 @@ import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useCatalogo } from '../hooks/hooks';
 import { CatalogoTable } from '../components/CatalogoTable';
 import { CATALOGOS } from '../constants';
+import { CatalogoDetailSheet } from '../components/CatalogoDetailSheet';
 
 export function CatalogoDetailPage() {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug, id } = useParams<{ slug: string; id?: string }>();
   const navigate = useNavigate();
   const { data, isLoading, isError } = useCatalogo(slug!);
 
@@ -30,7 +31,13 @@ export function CatalogoDetailPage() {
 
       {isError && <p className="text-destructive">No se pudo cargar el catálogo.</p>}
 
-      {data && <CatalogoTable registros={data} />}
+      {data && <CatalogoTable registros={data} columnasConfig={config?.columnas} slug={slug!} />}
+
+      <CatalogoDetailSheet
+        slug={slug!}
+        id={id ?? null}
+        onClose={() => navigate(`/catalogos/${slug}`)}
+      />
     </div>
   );
 }

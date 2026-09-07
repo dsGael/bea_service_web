@@ -28,6 +28,7 @@ export default function App() {
       <Route path="/almacen" element={<AlmacenPage />} />
       <Route path="/catalogos" element={<SelectCatalogoPage />} />
       <Route path="/catalogos/:slug" element={<CatalogoDetailPage />} />
+      <Route path="/catalogos/:slug/:id" element={<CatalogoDetailPage />} />
       <Route path="/usuarios" element={<UsuariosPage />} />
     </Route>
   </Route>
