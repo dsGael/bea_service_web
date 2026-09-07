@@ -1,11 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import {
-  Ticket,
-  ClipboardCheck,
-  Warehouse,
-  Boxes,
-  Users,
-} from 'lucide-react';
+import { Ticket, ClipboardCheck, Warehouse, Boxes, Users } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -16,6 +10,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from '@/components/ui/sidebar';
 
 const NAV_ITEMS = [
@@ -31,13 +26,17 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader>
-        <div className="flex items-center gap-2 px-2 py-1.5">
-          <span className="text-sm font-semibold group-data-[collapsible=icon]:hidden">
-            Mesa de Control
+      <SidebarHeader className=" bg-primary h-18 text-primary-foreground ">
+        <div className="flex items-center justify-between  py-3">
+          <span className="text-md font-semibold group-data-[collapsible=icon]:hidden">
+            Bea Service
           </span>
+            <SidebarTrigger />
+
         </div>
+        
       </SidebarHeader>
+
 
       <SidebarContent>
         <SidebarGroup>
@@ -45,9 +44,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {NAV_ITEMS.map((item) => {
-                // startsWith para que /tickets/:id también marque "Tickets" como activo
                 const isActive = location.pathname.startsWith(item.url);
-
                 return (
                   <SidebarMenuItem key={item.url}>
                     <SidebarMenuButton

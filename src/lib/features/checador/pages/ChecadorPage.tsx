@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { MapPin, Fingerprint, Loader2, CheckCircle2, XCircle } from 'lucide-react';
+import { MapPin, Fingerprint, Loader2, CheckCircle2, XCircle, Clock3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useGeolocation } from '../hooks/useGeolocation';
 import { useRegistrarChecada } from '../hooks/hooks';
@@ -87,7 +87,7 @@ const handleChecar = () => {
         
         {enCooldown && (
         <div className="flex items-center gap-2 rounded-md bg-blue-50 px-4 py-3 text-sm text-blue-700">
-            <Loader2 className="h-4 w-4 shrink-0" />
+            <Clock3 className="h-4 w-4 shrink-0" />
             Ya registraste tu checada. Espera unos minutos antes de volver a checar.
         </div>
         )}
