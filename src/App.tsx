@@ -4,10 +4,11 @@ import { ProtectedRoute } from './lib/core/router/protected-route';
 import { TicketsListPage } from './lib/features/tickets/pages/TicketsListPage';
 import { ChecadorPage } from './lib/features/checador/pages/ChecadorPage';
 import { AppLayout } from './lib/core/layout/AppLayout';
+import { SelectCatalogoPage } from './lib/features/catalogos/pages/SelectCatalogoPage';
+import { CatalogoDetailPage } from './lib/features/catalogos/pages/CatalogoDetailPage';
 
 // Placeholders — los reemplazas conforme construyas cada módulo
 const AlmacenPage = () => <div className="p-6">Almacen — pendiente</div>;
-const CatalogosPage = () => <div className="p-6">Catalogos — pendiente</div>;
 const UsuariosPage = () => <div className="p-6">Usuarios — pendiente</div>;
 
 
@@ -25,7 +26,8 @@ export default function App() {
       <Route path="/tickets/:id" element={<TicketsListPage />} />
       <Route path="/checador" element={<ChecadorPage />} />
       <Route path="/almacen" element={<AlmacenPage />} />
-      <Route path="/catalogos" element={<CatalogosPage />} />
+      <Route path="/catalogos" element={<SelectCatalogoPage />} />
+      <Route path="/catalogos/:slug" element={<CatalogoDetailPage />} />
       <Route path="/usuarios" element={<UsuariosPage />} />
     </Route>
   </Route>

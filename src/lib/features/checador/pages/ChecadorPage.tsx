@@ -29,7 +29,7 @@ const handleChecar = () => {
 
   return (
     <div className="mx-auto max-w-md space-y-6 p-6">
-      <h1 className="text-xl font-semibold">Checador</h1>
+      <h1 className="text-xl font-semibold">Registrar Asistencia</h1>
 
       {/* Estado de ubicación */}
       <div className="flex items-center justify-center rounded-lg border bg-muted/30 py-16 text-muted-foreground">
