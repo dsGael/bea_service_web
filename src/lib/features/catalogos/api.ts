@@ -10,6 +10,15 @@ export const catalogosApi = {
     const { data } = await apiClient.get(`/catalogos/${slug}/${id}`);
     return data;
   },
+    crear: async (slug: string, dto: Record<string, unknown>) => {
+    const { data } = await apiClient.post(`/catalogos/${slug}`, dto);
+    return data;
+  },
+
+  actualizar: async (slug: string, id: string, dto: Record<string, unknown>) => {
+    const { data } = await apiClient.patch(`/catalogos/${slug}/${id}`, dto);
+    return data;
+  },
 };
 
 export const catalogosKeys = {

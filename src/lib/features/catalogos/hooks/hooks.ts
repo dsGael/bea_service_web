@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { catalogosApi, catalogosKeys } from '../api';
 
 export function useCatalogo(slug: string) {
@@ -9,10 +9,34 @@ export function useCatalogo(slug: string) {
   });
 }
 
-export function useCatalogoDetalle(slug: string, id: string) {
+export function useCatalogoRegistro(slug: string, id: string | null) {
   return useQuery({
-    queryKey: catalogosKeys.detail(slug, id),
-    queryFn: () => catalogosApi.obtener(slug, id),
-    enabled: !!slug && !!id,
+    queryKey: id ? catalogosKeys.detail(slug, id) : [...catalogosKeys.all, 'empty-detail'],
+    queryFn: () => catalogosApi.obtener(slug, id!),
+    enabled: !!id,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+
+
+export function useCrearRegistro(slug: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (dto: Record<string, unknown>) => catalogosApi.crear(slug, dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: catalogosKeys.list(slug) });
+    },
+  });
+}
+
+export function useActualizarRegistro(slug: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, dto }: { id: string; dto: Record<string, unknown> }) =>
+      catalogosApi.actualizar(slug, id, dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: catalogosKeys.list(slug) });
+    },
   });
 }

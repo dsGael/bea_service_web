@@ -1,14 +1,16 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2, RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useCatalogo } from '../hooks/hooks';
 import { CatalogoTable } from '../components/CatalogoTable';
-import { CATALOGOS } from '../constants';
 import { CatalogoDetailSheet } from '../components/CatalogoDetailSheet';
+import { CATALOGOS } from '../constants';
+import { CatalogoCrearDialog } from '../components/CatalogoCrearDialog';
 
 export function CatalogoDetailPage() {
   const { slug, id } = useParams<{ slug: string; id?: string }>();
   const navigate = useNavigate();
-  const { data, isLoading, isError } = useCatalogo(slug!);
+  const { data, isLoading, isError, isFetching, refetch } = useCatalogo(slug!);
 
   const config = CATALOGOS.find((c) => c.slug === slug);
 
@@ -21,7 +23,16 @@ export function CatalogoDetailPage() {
         <ArrowLeft className="h-4 w-4" /> Volver a catálogos
       </button>
 
+    <div className="flex items-center justify-between">
       <h1 className="text-2xl font-semibold">{config?.label ?? slug}</h1>
+      <div className="flex gap-2">
+        {config && !config.soloLectura && <CatalogoCrearDialog config={config} />}
+        <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching} className="gap-2">
+          <RefreshCw className={`h-4 w-4 ${isFetching ? 'animate-spin' : ''}`} />
+          Actualizar
+        </Button>
+      </div>
+    </div>
 
       {isLoading && (
         <div className="flex justify-center py-12">
@@ -36,6 +47,7 @@ export function CatalogoDetailPage() {
       <CatalogoDetailSheet
         slug={slug!}
         id={id ?? null}
+        registros={data ?? []}
         onClose={() => navigate(`/catalogos/${slug}`)}
       />
     </div>
