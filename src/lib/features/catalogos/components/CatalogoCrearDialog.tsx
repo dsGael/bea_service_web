@@ -7,7 +7,7 @@ import { useCrearRegistro } from '../hooks/hooks';
 import { resolverCamposFormulario } from '../utils';
 import type { CatalogoConfig } from '../constants';
 
-export function CatalogoCrearDialog({ config }: { config: CatalogoConfig }) {
+export function CatalogoCrearDialog({ config }: Readonly<{ config: CatalogoConfig }>) {
   const [open, setOpen] = useState(false);
   const { mutate, isPending } = useCrearRegistro(config.slug);
   const campos = resolverCamposFormulario(config, 'crear');

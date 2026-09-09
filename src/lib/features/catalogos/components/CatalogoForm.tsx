@@ -14,7 +14,7 @@ interface Props {
   submitLabel?: string;
 }
 
-export function CatalogoForm({ campos, valoresIniciales, onSubmit, isPending, submitLabel }: Props) {
+export function CatalogoForm({ campos, valoresIniciales, onSubmit, isPending, submitLabel }: Readonly<Props>) {
   const [valores, setValores] = useState<Record<string, unknown>>(() => {
     const base: Record<string, unknown> = {};
     for (const campo of campos) {

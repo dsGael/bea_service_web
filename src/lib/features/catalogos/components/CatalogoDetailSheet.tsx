@@ -50,7 +50,7 @@ function resolverKeyField(registros: Record<string, unknown>[], columnasConfig?:
   return columnas.find((c) => c.toLowerCase().startsWith('id')) ?? columnas[0];
 }
 
-export function CatalogoDetailSheet({ slug, id, registros, onClose }: Props) {
+export function CatalogoDetailSheet({ slug, id, registros, onClose }: Readonly<Props>) {
   const isOpen = !!id;
   const config = CATALOGOS.find((c) => c.slug === slug);
   const keyField = resolverKeyField(registros, config?.columnas);
