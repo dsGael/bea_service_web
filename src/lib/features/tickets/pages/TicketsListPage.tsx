@@ -6,6 +6,7 @@ import { Loader2 } from 'lucide-react';
 import { useTickets } from '../hooks/hooks';
 import { TicketFilters } from '../components/TicketFIlters';
 import { TicketDetailSheet } from '../components/TicketDetailSheet';
+import { CrearTicketDialog } from '../components/CrearTicketDialog';
 
 export function TicketsListPage() {
   const { id } = useParams<{ id?: string }>();
@@ -23,9 +24,12 @@ export function TicketsListPage() {
   return (
     <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Ordenes de Servicio</h1>
-        {isFetching && !isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
-      </div>
+  <h1 className="text-2xl font-semibold">Ordenes de Servicio</h1>
+  <div className="flex items-center gap-2">
+    {isFetching && !isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+    <CrearTicketDialog />
+  </div>
+</div>
 
       <TicketFilters
         idEstadoActivo={idestado}

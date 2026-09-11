@@ -222,3 +222,31 @@ export interface CatRuta {
   idruta: string;
   nombre?: string | null;
 }
+
+export interface DispositivoDeAutobus {
+  idDispositivo: string;
+  idDispositivoT: string;
+  numeroSerie?: string | null;
+  cat_dispositivo_t?: CatDispositivoT | null;
+}
+
+export interface FallaPorTipo {
+  idFalla: string;
+  idDispositivo: string; // en realidad referencia idDispositivoT, nombre heredado
+  nombre?: string | null;
+  falla?: string | null;
+  descripcionFalla?: string | null;
+}
+
+export interface CrearTicketPayload {
+  idautobus: string;
+  numeroeconomico?: string;
+  iddispositivo: string;
+  iddispositivot: string;
+  idfalla: string;
+  idprioridad?: string;
+  idtecnico?: string;
+  comentarios?: string;
+  descripcion?: string;
+  areatrabajo?: string;
+}
