@@ -38,7 +38,7 @@ export const catalogosCascadaApi = {
   },
 
   listarFallasPorTipoDispositivo: async (idDispositivoT: string): Promise<FallaPorTipo[]> => {
-    const { data } = await apiClient.get(`/catalogos/falla/tipo/${idDispositivoT}`);
+    const { data } = await apiClient.get(`/catalogos/falla/dispositivotipo/${idDispositivoT}`);
     return data;
   },
 

@@ -1,22 +1,8 @@
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { CampoFormulario } from './CampoFormulario';
 import {
   useAutobuses,
   useDispositivosPorAutobus,
@@ -28,14 +14,14 @@ import {
 export function CrearTicketDialog() {
   const [open, setOpen] = useState(false);
 
-  const [idautobus, setIdautobus] = useState<string | null>(null);
-  const [iddispositivo, setIddispositivo] = useState<string | null>(null);
-  const [idfalla, setIdfalla] = useState<string | null>(null);
-  const [idprioridad, setIdprioridad] = useState<string | null>(null);
+  const [idautobus, setIdautobus] = useState('');
+  const [iddispositivo, setIddispositivo] = useState('');
+  const [idfalla, setIdfalla] = useState('');
+  const [idprioridad, setIdprioridad] = useState('');
   const [comentarios, setComentarios] = useState('');
 
   const { data: autobuses, isLoading: loadingAutobuses } = useAutobuses();
-  const { data: dispositivos, isLoading: loadingDispositivos } = useDispositivosPorAutobus(idautobus);
+  const { data: dispositivos, isLoading: loadingDispositivos } = useDispositivosPorAutobus(idautobus || null);
   const { data: prioridades } = usePrioridades();
 
   const dispositivoSeleccionado = dispositivos?.find((d) => d.idDispositivo === iddispositivo);
@@ -46,22 +32,22 @@ export function CrearTicketDialog() {
   const { mutate, isPending } = useCrearTicket();
 
   const resetForm = () => {
-    setIdautobus(null);
-    setIddispositivo(null);
-    setIdfalla(null);
-    setIdprioridad(null);
+    setIdautobus('');
+    setIddispositivo('');
+    setIdfalla('');
+    setIdprioridad('');
     setComentarios('');
   };
 
-  const handleAutobusChange = (value: string | null) => {
+  const handleAutobusChange = (value: string) => {
     setIdautobus(value);
-    setIddispositivo(null); // resetea los dependientes
-    setIdfalla(null);
+    setIddispositivo('');
+    setIdfalla('');
   };
 
-  const handleDispositivoChange = (value: string | null) => {
+  const handleDispositivoChange = (value: string) => {
     setIddispositivo(value);
-    setIdfalla(null); // resetea el dependiente
+    setIdfalla('');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -74,15 +60,10 @@ export function CrearTicketDialog() {
         iddispositivo,
         iddispositivot: idDispositivoT,
         idfalla,
-        idprioridad: idprioridad ?? undefined,
+        idprioridad: idprioridad || undefined,
         comentarios: comentarios || undefined,
       },
-      {
-        onSuccess: () => {
-          setOpen(false);
-          resetForm();
-        },
-      }
+      { onSuccess: () => { setOpen(false); resetForm(); } }
     );
   };
 
@@ -90,7 +71,7 @@ export function CrearTicketDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger >
         <Button size="sm" className="gap-2">
           <Plus className="h-4 w-4" /> Nuevo ticket
         </Button>
@@ -101,82 +82,63 @@ export function CrearTicketDialog() {
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
-            <Label>Autobús *</Label>
-            <Select value={idautobus ?? undefined} onValueChange={handleAutobusChange} disabled={loadingAutobuses}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecciona un autobús" />
-              </SelectTrigger>
-              <SelectContent>
-                {autobuses?.map((a) => (
-                  <SelectItem key={a.idAutobus} value={a.idAutobus}>
-                    {a.numeroEconomico ?? a.idAutobus}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <CampoFormulario
+            label="Autobús"
+            tipo="combobox"
+            requerido
+            value={idautobus}
+            onChange={handleAutobusChange}
+            opciones={autobuses?.map((a) => ({ value: a.idAutobus, label: a.numeroEconomico ?? a.idAutobus })) ?? []}
+            placeholder="Selecciona un autobús"
+            searchPlaceholder="Buscar por número económico..."
+            disabled={loadingAutobuses}
+          />
 
-          <div className="space-y-1.5">
-            <Label>Dispositivo *</Label>
-            <Select
-              value={iddispositivo ?? undefined}
-              onValueChange={handleDispositivoChange}
-              disabled={!idautobus || loadingDispositivos}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={idautobus ? 'Selecciona un dispositivo' : 'Primero elige un autobús'} />
-              </SelectTrigger>
-              <SelectContent>
-                {dispositivos?.map((d) => (
-                  <SelectItem key={d.idDispositivo} value={d.idDispositivo}>
-                    {d.cat_dispositivo_t?.nombre ?? d.idDispositivoT} — {d.numeroSerie ?? d.idDispositivo}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <CampoFormulario
+            label="Dispositivo"
+            tipo="combobox"
+            requerido
+            value={iddispositivo}
+            onChange={handleDispositivoChange}
+            opciones={
+              dispositivos?.map((d) => ({
+                value: d.idDispositivo,
+                label: `${d.cat_dispositivo_t?.nombre ?? d.idDispositivoT} — ${d.numeroSerie ?? d.idDispositivo}`,
+              })) ?? []
+            }
+            placeholder={idautobus ? 'Selecciona un dispositivo' : 'Primero elige un autobús'}
+            searchPlaceholder="Buscar dispositivo..."
+            disabled={!idautobus || loadingDispositivos}
+          />
 
-          <div className="space-y-1.5">
-            <Label>Falla *</Label>
-            <Select
-              value={idfalla ?? undefined}
-              onValueChange={setIdfalla}
-              disabled={!iddispositivo || loadingFallas}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={iddispositivo ? 'Selecciona una falla' : 'Primero elige un dispositivo'} />
-              </SelectTrigger>
-              <SelectContent>
-                {fallas?.map((f) => (
-                  <SelectItem key={f.idFalla} value={f.idFalla}>
-                    {f.falla ?? f.nombre}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <CampoFormulario
+            label="Falla"
+            tipo="combobox"
+            requerido
+            value={idfalla}
+            onChange={setIdfalla}
+            opciones={fallas?.map((f) => ({ value: f.idFalla, label: f.falla ?? f.nombre ?? f.idFalla })) ?? []}
+            placeholder={iddispositivo ? 'Selecciona una falla' : 'Primero elige un dispositivo'}
+            searchPlaceholder="Buscar falla..."
+            disabled={!iddispositivo || loadingFallas}
+          />
 
-          <div className="space-y-1.5">
-            <Label>Prioridad</Label>
-            <Select value={idprioridad ?? undefined} onValueChange={setIdprioridad}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecciona prioridad" />
-              </SelectTrigger>
-              <SelectContent>
-                {prioridades?.map((p) => (
-                  <SelectItem key={p.idPrioridad} value={p.idPrioridad}>
-                    {p.nombre}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <CampoFormulario
+            label="Prioridad"
+            tipo="combobox"
+            value={idprioridad}
+            onChange={setIdprioridad}
+            opciones={prioridades?.map((p) => ({ value: p.idPrioridad, label: p.nombre ?? p.idPrioridad })) ?? []}
+            placeholder="Selecciona prioridad"
+            searchPlaceholder="Buscar prioridad..."
+          />
 
-          <div className="space-y-1.5">
-            <Label>Comentarios</Label>
-            <Textarea value={comentarios} onChange={(e) => setComentarios(e.target.value)} rows={3} />
-          </div>
+          <CampoFormulario
+            label="Comentarios"
+            tipo="textarea"
+            value={comentarios}
+            onChange={setComentarios}
+          />
 
           <Button type="submit" className="w-full" disabled={!formValido || isPending}>
             {isPending ? 'Creando…' : 'Crear ticket'}
