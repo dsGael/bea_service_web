@@ -1,5 +1,5 @@
 import { apiClient } from '@/lib/core/api/axios-client';
-import type { BinTicket, CatAutobus, CatPrioridad, CrearTicketPayload, DispositivoDeAutobus, FallaPorTipo, ListarTicketsParams, ListarTicketsResponse } from './types';
+import type { AsignacionDiaria, BinTicket, CatAutobus, CatPrioridad, CatReporta, CatRuta, CrearTicketPayload, DispositivoDeAutobus, FallaPorTipo, ListarTicketsParams, ListarTicketsResponse, TecnicoAsignable } from './types';
 
 
 
@@ -15,15 +15,32 @@ export const ticketsApi = {
     return data;
   },
 
+  
+
   obtenerDetalle: async (id: string): Promise<BinTicket> => {
     const { data } = await apiClient.get(`/tickets/${id}`);
     return data;
   },
 
-  crear: async (payload: CrearTicketPayload): Promise<BinTicket> => {
-    const { data } = await apiClient.post('/tickets', payload);
-    return data;
-  },
+crear: async (payload: CrearTicketPayload): Promise<BinTicket> => {
+  const formData = new FormData();
+
+  Object.entries(payload).forEach(([key, value]) => {
+    if (key === 'imagenes' || key === 'videos') return;
+    if (value !== undefined && value !== null && value !== '') {
+      formData.append(key, String(value));
+    }
+  });
+
+  // ambos van bajo el mismo campo multipart: evidenciasFalla
+  payload.imagenes?.forEach((file) => formData.append('evidenciasFalla', file));
+  payload.videos?.forEach((file) => formData.append('evidenciasFalla', file));
+
+  const { data } = await apiClient.post('/tickets', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return data;
+},
 };
 
 export const catalogosCascadaApi = {
@@ -46,4 +63,31 @@ export const catalogosCascadaApi = {
     const { data } = await apiClient.get('/catalogos/prioridades');
     return data;
   },
+   listarReporta: async (): Promise<CatReporta[]> => {
+    const { data } = await apiClient.get('/catalogos/reporta');
+    return data;
+  },
+
+  listarCategorias: async (): Promise<{ idCategoria: string; nombre: string }[]> => {
+    const { data } = await apiClient.get('/catalogos/categorias');
+    return data;
+  },
+
+  listarTecnicos: async (): Promise<TecnicoAsignable[]> => {
+    const { data } = await apiClient.get('/usuarios/tecnicos');
+    return data;
+  },
+
+  obtenerAsignacionReciente: async (numeroEconomico: string): Promise<AsignacionDiaria | null> => {
+    const { data } = await apiClient.get(`/catalogos/asignacion-diaria/autobus/${numeroEconomico}/reciente`);
+    return data;
+  },
+
+  listarRutas: async (): Promise<CatRuta[]> => {
+    const { data } = await apiClient.get('/catalogos/rutas');
+    return data;
+  },
 };
+
+
+

@@ -60,3 +60,44 @@ export function useCrearTicket() {
     },
   });
 }
+
+export function useReporta() {
+  return useQuery({
+    queryKey: ['catalogos', 'reporta'],
+    queryFn: catalogosCascadaApi.listarReporta,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useCategorias() {
+  return useQuery({
+    queryKey: ['catalogos', 'categorias'],
+    queryFn: catalogosCascadaApi.listarCategorias,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useTecnicos() {
+  return useQuery({
+    queryKey: ['catalogos', 'tecnicos'],
+    queryFn: catalogosCascadaApi.listarTecnicos,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useRutas() {
+  return useQuery({
+    queryKey: ['catalogos', 'rutas'],
+    queryFn: catalogosCascadaApi.listarRutas,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useAsignacionReciente(numeroEconomico: string | null) {
+  return useQuery({
+    queryKey: ['asignacion-reciente', numeroEconomico],
+    queryFn: () => catalogosCascadaApi.obtenerAsignacionReciente(numeroEconomico!),
+    enabled: !!numeroEconomico,
+    retry: false, // si no hay asignación (404), no reintentar
+  });
+}

@@ -190,6 +190,55 @@ export interface BinTicket {
   cat_empresa?: CatEmpresa | null;
   bin_ticket_detail?: BinTicketDetail[];
 }
+
+export interface CatReporta {
+  idReporta: string;
+  nombre: string;
+  departamento?: string | null;
+  idEmpresa?: string | null;
+  email?: string | null;
+  telefono?: string | null;
+  cat_empresa?: { idEmpresa: string; nombre: string; acronimo?: string | null } | null;
+}
+
+export interface AsignacionDiaria {
+  idAsignacion: string;
+  FOLIO?: number | null;
+  FECHA?: string | null;
+  LINEA?: number | null;
+  UNIDAD?: string | null;
+  OPERADOR?: string | null;
+  NOMBRE_COMPLETO?: string | null;
+}
+
+export interface TecnicoAsignable {
+  idUsuarioApp: string;
+  perfil?: string | null;
+  cat_empleados?: { idEmpleado: string; nombre: string } | null;
+}
+
+export interface CrearTicketPayload {
+  idautobus: string;
+  numeroeconomico?: string;
+  iddispositivo: string;
+  iddispositivot: string;
+  idfalla: string;
+  idprioridad?: string;
+  idruta?: string;
+  idreporta?: string;
+  idempresa?: string;
+  idcategoria?: string;
+  idtecnico?: string;
+  fecha?: string;
+  descripcion?: string;
+  areatrabajo?: string;
+  comentarios?: string;
+  asunto_correo?: string;
+  favoritos?: string;
+  imagenes?: File[];
+  videos?: File[];
+}
+
 export interface ListarTicketsParams {
   buscar?: string;
   idestado?: string;
