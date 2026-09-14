@@ -15,7 +15,11 @@ export const ticketsApi = {
     return data;
   },
 
-  
+
+  conteosPorEstado: async (): Promise<Record<string, number>> => {
+    const { data } = await apiClient.get('/tickets/conteos-por-estado');
+    return data;
+  },
 
   obtenerDetalle: async (id: string): Promise<BinTicket> => {
     const { data } = await apiClient.get(`/tickets/${id}`);

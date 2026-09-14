@@ -101,3 +101,11 @@ export function useAsignacionReciente(numeroEconomico: string | null) {
     retry: false, // si no hay asignación (404), no reintentar
   });
 }
+
+export function useConteosPorEstado() {
+  return useQuery({
+    queryKey: ['tickets', 'conteos-por-estado'],
+    queryFn: ticketsApi.conteosPorEstado,
+    staleTime: 60_000, // los conteos no necesitan estar al segundo
+  });
+}

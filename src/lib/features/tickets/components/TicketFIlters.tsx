@@ -1,10 +1,10 @@
-// features/tickets/components/TicketFilters.tsx
 import { Button } from '@/components/ui/button';
 import { ESTADO_IDS } from '../constants';
 
 interface Props {
   idEstadoActivo: string | undefined;
   onChange: (idestado: string | undefined) => void;
+  conteos?: Record<string, number>;
 }
 
 const FILTROS: { value: string | undefined; label: string }[] = [
@@ -15,19 +15,30 @@ const FILTROS: { value: string | undefined; label: string }[] = [
   { value: ESTADO_IDS.CANCELADO, label: 'Cancelados' },
 ];
 
-export function TicketFilters({ idEstadoActivo, onChange }: Props) {
+export function TicketFilters({ idEstadoActivo, onChange, conteos }: Props) {
+  const totalTodos = conteos ? Object.values(conteos).reduce((a, b) => a + b, 0) : undefined;
+
   return (
     <div className="flex flex-wrap gap-2">
-      {FILTROS.map((f) => (
-        <Button
-          key={f.label}
-          variant={idEstadoActivo === f.value ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => onChange(f.value)}
-        >
-          {f.label}
-        </Button>
-      ))}
+      {FILTROS.map((f) => {
+        const count = f.value === undefined ? totalTodos : conteos?.[f.value];
+        return (
+          <Button
+            key={f.label}
+            variant={idEstadoActivo === f.value ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => onChange(f.value)}
+            className="gap-1.5 text-md"
+          >
+            {f.label}
+            {count !== undefined && (
+              <span className=" pl-3 text-md ">
+                 {count}
+              </span>
+            )}
+          </Button>
+        );
+      })}
     </div>
   );
 }

@@ -210,10 +210,12 @@ export interface AsignacionDiaria {
   OPERADOR?: string | null;
   NOMBRE_COMPLETO?: string | null;
 }
-
 export interface TecnicoAsignable {
   idUsuarioApp: string;
+  idEmpleado?: string | null;
   perfil?: string | null;
+  especialidad?: string | null;
+  activo?: boolean;
   cat_empleados?: { idEmpleado: string; nombre: string } | null;
 }
 

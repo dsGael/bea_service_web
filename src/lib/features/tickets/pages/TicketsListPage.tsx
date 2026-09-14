@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { TicketTable } from '../components/TicketTable';
 import { ESTADO_IDS } from '../constants';
 import { Loader2 } from 'lucide-react';
-import { useTickets } from '../hooks/hooks';
+import { useConteosPorEstado, useTickets } from '../hooks/hooks';
 import { TicketFilters } from '../components/TicketFIlters';
 import { TicketDetailSheet } from '../components/TicketDetailSheet';
 import { CrearTicketDialog } from '../components/CrearTicketDialog';
@@ -18,8 +18,10 @@ export function TicketsListPage() {
   const { data, isLoading, isError, isFetching } = useTickets({
     idestado,
     page,
-    limit: 20,
+    limit: 40,
   });
+  const { data: conteos } = useConteosPorEstado();
+
 
   return (
     <div className="space-y-6 p-6">
@@ -37,6 +39,7 @@ export function TicketsListPage() {
           setIdestado(v);
           setPage(1);
         }}
+        conteos={conteos}
       />
 
       {isLoading && <p className="text-muted-foreground">Cargando tickets…</p>}
