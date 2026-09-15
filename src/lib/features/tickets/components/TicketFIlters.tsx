@@ -15,7 +15,7 @@ const FILTROS: { value: string | undefined; label: string }[] = [
   { value: ESTADO_IDS.CANCELADO, label: 'Cancelados' },
 ];
 
-export function TicketFilters({ idEstadoActivo, onChange, conteos }: Props) {
+export function TicketFilters({ idEstadoActivo, onChange, conteos }: Readonly<Props>) {
   const totalTodos = conteos ? Object.values(conteos).reduce((a, b) => a + b, 0) : undefined;
 
   return (

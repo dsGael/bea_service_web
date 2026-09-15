@@ -127,6 +127,7 @@ export function CrearTicketDialog() {
         idautobus,
         numeroeconomico,
         iddispositivo,
+        tiporeparacion: 'c0rr3ct1v0', // valor fijo para tickets correctivos
         iddispositivot: idDispositivoT,
         idfalla,
         idprioridad: idprioridad || undefined,

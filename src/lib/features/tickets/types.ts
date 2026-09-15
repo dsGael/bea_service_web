@@ -223,6 +223,7 @@ export interface CrearTicketPayload {
   idautobus: string;
   numeroeconomico?: string;
   iddispositivo: string;
+  tiporeparacion: string;
   iddispositivot: string;
   idfalla: string;
   idprioridad?: string;
@@ -289,7 +290,7 @@ export interface FallaPorTipo {
   descripcionFalla?: string | null;
 }
 
-export interface CrearTicketPayload {
+export interface CrearTicketPayload2 {
   idautobus: string;
   numeroeconomico?: string;
   iddispositivo: string;
