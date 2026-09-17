@@ -219,6 +219,11 @@ export interface TecnicoAsignable {
   cat_empleados?: { idEmpleado: string; nombre: string } | null;
 }
 
+export interface CatEmpresaCompleta {
+  idEmpresa: string;
+  nombre: string;
+  acronimo?: string | null;
+}
 export interface CrearTicketPayload {
   idautobus: string;
   numeroeconomico?: string;

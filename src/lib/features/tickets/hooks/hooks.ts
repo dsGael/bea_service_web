@@ -61,6 +61,14 @@ export function useCrearTicket() {
   });
 }
 
+export function useEmpresas() {
+  return useQuery({
+    queryKey: ['catalogos', 'empresas'],
+    queryFn: catalogosCascadaApi.listarEmpresas,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
 export function useReporta() {
   return useQuery({
     queryKey: ['catalogos', 'reporta'],

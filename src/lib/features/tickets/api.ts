@@ -1,5 +1,5 @@
 import { apiClient } from '@/lib/core/api/axios-client';
-import type { AsignacionDiaria, BinTicket, CatAutobus, CatPrioridad, CatReporta, CatRuta, CrearTicketPayload, DispositivoDeAutobus, FallaPorTipo, ListarTicketsParams, ListarTicketsResponse, TecnicoAsignable } from './types';
+import type { AsignacionDiaria, BinTicket, CatAutobus, CatEmpresaCompleta, CatPrioridad, CatReporta, CatRuta, CrearTicketPayload, DispositivoDeAutobus, FallaPorTipo, ListarTicketsParams, ListarTicketsResponse, TecnicoAsignable } from './types';
 
 
 
@@ -50,6 +50,11 @@ crear: async (payload: CrearTicketPayload): Promise<BinTicket> => {
 export const catalogosCascadaApi = {
   listarAutobuses: async (): Promise<CatAutobus[]> => {
     const { data } = await apiClient.get('/catalogos/autobuses');
+    return data;
+  },
+
+    listarEmpresas: async (): Promise<CatEmpresaCompleta[]> => {
+    const { data } = await apiClient.get('/catalogos/empresas');
     return data;
   },
 

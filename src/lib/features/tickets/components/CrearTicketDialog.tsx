@@ -19,6 +19,7 @@ import {
   useRutas,
   useAsignacionReciente,
   useCrearTicket,
+  useEmpresas,
 } from '../hooks/hooks';
 import { CampoFormulario } from '../components/CampoFormulario';
 
@@ -50,7 +51,7 @@ export function CrearTicketDialog() {
   const [favoritos, setFavoritos] = useState('');
   const [imagenes, setImagenes] = useState<File[]>([]);
   const [videos, setVideos] = useState<File[]>([]);
-
+  const { data: empresas } = useEmpresas();
   const { data: autobuses, isLoading: loadingAutobuses } = useAutobuses();
   const { data: dispositivos, isLoading: loadingDispositivos } = useDispositivosPorAutobus(idautobus || null);
   const { data: prioridades } = usePrioridades();
@@ -118,13 +119,13 @@ export function CrearTicketDialog() {
     setVideos([]);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!idautobus || !iddispositivo || !idDispositivoT || !idfalla) return;
 
     mutate(
       {
-        idautobus,
+        idautobus, 
         numeroeconomico,
         iddispositivo,
         tiporeparacion: 'c0rr3ct1v0', // valor fijo para tickets correctivos
@@ -152,7 +153,14 @@ export function CrearTicketDialog() {
   const formValido = !!idautobus && !!iddispositivo && !!idfalla;
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(nuevoEstado) => {
+        setOpen(nuevoEstado);
+        if (!nuevoEstado) {
+          resetForm();
+        }
+      }}>
       <DialogTrigger >
         <Button size="sm" className="gap-2">
           <Plus className="h-4 w-4" /> Nuevo ticket
@@ -178,6 +186,15 @@ export function CrearTicketDialog() {
             opciones={autobuses?.map((a) => ({ value: a.idAutobus, label: a.numeroEconomico ?? a.idAutobus })) ?? []}
             placeholder="Selecciona un autobús"
             disabled={loadingAutobuses}
+          />
+          
+          <CampoFormulario
+            label="Ruta"
+            tipo="combobox"
+            value={idruta}
+            onChange={setIdruta}
+            opciones={rutas?.map((r) => ({ value: r.idRuta, label: r.nombre ?? r.idRuta })) ?? []}
+            placeholder={asignacion ? 'Autorellenada — puedes cambiarla' : 'Selecciona una ruta'}
           />
 
           <CampoFormulario
@@ -207,14 +224,7 @@ export function CrearTicketDialog() {
             disabled={!iddispositivo || loadingFallas}
           />
 
-          <CampoFormulario
-            label="Ruta"
-            tipo="combobox"
-            value={idruta}
-            onChange={setIdruta}
-            opciones={rutas?.map((r) => ({ value: r.idRuta, label: r.nombre ?? r.idRuta })) ?? []}
-            placeholder={asignacion ? 'Autorellenada — puedes cambiarla' : 'Selecciona una ruta'}
-          />
+      
 
           <CampoFormulario
             label="Prioridad"
@@ -235,11 +245,11 @@ export function CrearTicketDialog() {
           />
 
           <CampoFormulario
-            label="Empresa de quien reporta"
+            label="Empresa"
             tipo="combobox"
             value={idempresa}
             onChange={setIdempresa}
-            opciones={reportas?.map((r) => r.cat_empresa).filter(Boolean).map((e) => ({ value: e!.idEmpresa, label: e!.nombre })) ?? []}
+            opciones={empresas?.map((e) => ({ value: e.idEmpresa, label: e.nombre })) ?? []}
             placeholder="Autorellenada — puedes cambiarla"
           />
 
