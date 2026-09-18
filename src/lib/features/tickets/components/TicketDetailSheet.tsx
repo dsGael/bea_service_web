@@ -1,29 +1,70 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
+
+import { Button } from '@/components/ui/button';
+
+import {
+  Loader2,
+  Pencil,
+  Wrench,
+} from 'lucide-react';
+
 import { formatFechaTicket } from '../utils';
 import { useTicketDetail } from '../hooks/hooks';
 import { EstadoBadge } from './EstadoBadge';
 import { EvidenciaGallery } from './EvidenciaGallery';
+
+import { EditarTicketDialog } from './EditarTicketDialog';
+import { AgregarReparacionDialog } from './AgregarReparacionDialog';
 
 interface Props {
   ticketId: string | null;
   onClose: () => void;
 }
 
-export function TicketDetailSheet({ ticketId, onClose }: Readonly<Props>) {
+export function TicketDetailSheet({
+  ticketId,
+  onClose,
+}: Readonly<Props>) {
   const isOpen = !!ticketId;
 
   return (
-    <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Sheet
+      open={isOpen}
+      onOpenChange={(open) =>
+        !open && onClose()
+      }
+    >
       <SheetContent className="w-full overflow-y-auto data-[side=right]:sm:max-w-4xl">
-          {ticketId && <TicketDetailContent ticketId={ticketId} />}
+        {ticketId && (
+          <TicketDetailContent
+            ticketId={ticketId}
+          />
+        )}
       </SheetContent>
     </Sheet>
   );
 }
 
-function TicketDetailContent({ ticketId }: Readonly<{ ticketId: string }>) {
-  const { data: ticket, isLoading, isError } = useTicketDetail(ticketId);
+function TicketDetailContent({
+  ticketId,
+}: Readonly<{ ticketId: string }>) {
+  const [editarOpen, setEditarOpen] =
+    useState(false);
+
+  const [reparacionOpen, setReparacionOpen] =
+    useState(false);
+
+  const {
+    data: ticket,
+    isLoading,
+    isError,
+  } = useTicketDetail(ticketId);
 
   if (isLoading) {
     return (
@@ -34,82 +75,221 @@ function TicketDetailContent({ ticketId }: Readonly<{ ticketId: string }>) {
   }
 
   if (isError || !ticket) {
-    return <div className="py-6 text-destructive">No se pudo cargar el ticket.</div>;
+    return (
+      <div className="py-6 text-destructive">
+        No se pudo cargar el ticket.
+      </div>
+    );
   }
 
-  const detalle = ticket.bin_ticket_detail?.at(-1);
-  const nombreTecnico = ticket.cat_tecnicos?.cat_empleados?.nombre ?? '—';
-  const nombreFalla = ticket.cat_falla?.nombre ?? ticket.cat_falla?.falla ?? '—';
-  const unidad = ticket.numeroeconomico ?? ticket.cat_autobus?.numeroEconomico ?? '—';
+  const detalle =
+    ticket.bin_ticket_detail?.at(-1);
 
-  const evidenciaFalla = [...(ticket.imagenfalla1 ?? []), ...(ticket.video ?? [])];
-  const evidenciaReparacion = [...(detalle?.imagen1 ?? []), ...(detalle?.video ?? [])];
+  const nombreTecnico =
+    ticket.cat_tecnicos
+      ?.cat_empleados
+      ?.nombre ?? '—';
+
+  const nombreFalla =
+    ticket.cat_falla?.nombre ??
+    ticket.cat_falla?.falla ??
+    '—';
+
+  const unidad =
+    ticket.numeroeconomico ??
+    ticket.cat_autobus
+      ?.numeroEconomico ??
+    '—';
+
+  const evidenciaFalla = [
+    ...(ticket.imagenfalla1 ?? []),
+    ...(ticket.video ?? []),
+  ];
+
+  const evidenciaReparacion = [
+    ...(detalle?.imagen1 ?? []),
+    ...(detalle?.video ?? []),
+  ];
 
   return (
-    <div className="space-y-6 h-0 flex-1 overflow-y-auto p-6 w-full">
-      <SheetHeader className="space-y-2 text-left">
-        <div className="flex items-start justify-between gap-2">
-          <SheetTitle className="text-xl">{ticket.folio}</SheetTitle>
-          <EstadoBadge estado={ticket.estado} idestado={ticket.idestado} />
-        </div>
-        <p className="text-sm text-muted-foreground">
-          {unidad} · Creado el {formatFechaTicket(ticket.fechacreacion)}
-        </p>
-      </SheetHeader>
+    <>
+      <div className="space-y-6 h-0 flex-1 overflow-y-auto p-6 w-full">
 
-      <section className="grid grid-cols-2 gap-4 rounded-lg border p-4 text-sm">
-        <div>
-          <p className="text-muted-foreground">Falla reportada</p>
-          <p className="font-medium">{nombreFalla}</p>
-        </div>
-        <div>
-          <p className="text-muted-foreground">Técnico asignado</p>
-          <p className="font-medium">{nombreTecnico}</p>
-        </div>
-        <div>
-          <p className="text-muted-foreground">Prioridad</p>
-          <p className="font-medium">{ticket.cat_prioridad?.nombre ?? '—'}</p>
-        </div>
-        <div>
-          <p className="text-muted-foreground">Dispositivo</p>
-          <p className="font-medium">{ticket.cat_dispositivo_t?.nombre ?? '—'}</p>
-        </div>
-        {ticket.comentarios && (
-          <div className="col-span-2">
-            <p className="text-muted-foreground">Comentario original</p>
-            <p className="font-medium">{ticket.comentarios}</p>
+        <SheetHeader className="space-y-2 text-left">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <SheetTitle className="text-xl">
+                {ticket.folio}
+              </SheetTitle>
+
+              <EstadoBadge
+                estado={ticket.estado}
+                idestado={ticket.idestado}
+              />
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                setEditarOpen(true)
+              }
+            >
+              <Pencil className="mr-2 h-4 w-4" />
+              Editar ticket
+            </Button>
           </div>
-        )}
-      </section>
 
-      {detalle && (
-        <section className="space-y-3 rounded-lg border p-4">
-          <h2 className="font-medium">Diagnóstico y reparación</h2>
-          <div className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
-            <div>
-              <p className="text-muted-foreground">Diagnóstico</p>
-              <p>{detalle.cat_diagnostico?.diagnostico ?? 'Sin diagnóstico registrado'}</p>
-            </div>
-            <div>
-              <p className="text-muted-foreground">Reparación realizada</p>
-              <p>{detalle.Reparacion ?? '—'}</p>
-            </div>
-            {detalle.comentarios && (
-              <div className="sm:col-span-2">
-                <p className="text-muted-foreground">Comentarios del técnico</p>
-                <p>{detalle.comentarios}</p>
-              </div>
+          <p className="text-sm text-muted-foreground">
+            {unidad} · Creado el{' '}
+            {formatFechaTicket(
+              ticket.fechacreacion,
             )}
+          </p>
+        </SheetHeader>
+
+        <section className="grid grid-cols-2 gap-4 rounded-lg border p-4 text-sm">
+
+          <div>
+            <p className="text-muted-foreground">
+              Falla reportada
+            </p>
+
+            <p className="font-medium">
+              {nombreFalla}
+            </p>
           </div>
+
+          <div>
+            <p className="text-muted-foreground">
+              Técnico asignado
+            </p>
+
+            <p className="font-medium">
+              {nombreTecnico}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-muted-foreground">
+              Prioridad
+            </p>
+
+            <p className="font-medium">
+              {ticket.cat_prioridad?.nombre ??
+                '—'}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-muted-foreground">
+              Dispositivo
+            </p>
+
+            <p className="font-medium">
+              {ticket.cat_dispositivo_t
+                ?.nombre ?? '—'}
+            </p>
+          </div>
+
+          {ticket.comentarios && (
+            <div className="col-span-2">
+              <p className="text-muted-foreground">
+                Comentario original
+              </p>
+
+              <p className="font-medium">
+                {ticket.comentarios}
+              </p>
+            </div>
+          )}
         </section>
-      )}
 
-      <section className="space-y-4">
-        <EvidenciaGallery titulo="Evidencia de la falla" urls={evidenciaFalla} />
-        <EvidenciaGallery titulo="Evidencia de la reparación" urls={evidenciaReparacion} />
-      </section>
+        {detalle && (
+          <section className="space-y-3 rounded-lg border p-4">
 
-      {/* <ValidacionPanel ticket={ticket} /> */}
-    </div>
+            <h2 className="font-medium">
+              Diagnóstico y reparación
+            </h2>
+
+            <div className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
+
+              <div>
+                <p className="text-muted-foreground">
+                  Diagnóstico
+                </p>
+
+                <p>
+                  {detalle
+                    .cat_diagnostico
+                    ?.diagnostico ??
+                    'Sin diagnóstico registrado'}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-muted-foreground">
+                  Reparación realizada
+                </p>
+
+                <p>
+                  {detalle.Reparacion ??
+                    '—'}
+                </p>
+              </div>
+
+              {detalle.comentarios && (
+                <div className="sm:col-span-2">
+                  <p className="text-muted-foreground">
+                    Comentarios del técnico
+                  </p>
+
+                  <p>
+                    {detalle.comentarios}
+                  </p>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        <section className="space-y-4">
+          <EvidenciaGallery
+            titulo="Evidencia de la falla"
+            urls={evidenciaFalla}
+          />
+
+          <EvidenciaGallery
+            titulo="Evidencia de la reparación"
+            urls={evidenciaReparacion}
+          />
+        </section>
+
+        <div className="border-t pt-6">
+          <Button
+            className="w-full"
+            onClick={() =>
+              setReparacionOpen(true)
+            }
+          >
+            <Wrench className="mr-2 h-4 w-4" />
+            Agregar reparación
+          </Button>
+        </div>
+      </div>
+
+      <EditarTicketDialog
+        ticket={ticket}
+        open={editarOpen}
+        onOpenChange={setEditarOpen}
+      />
+
+      <AgregarReparacionDialog
+        ticketId={ticketId}
+        idFalla={ticket.idfalla ?? ''}
+        open={reparacionOpen}
+        onOpenChange={setReparacionOpen}
+      />
+    </>
   );
 }

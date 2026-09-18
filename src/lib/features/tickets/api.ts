@@ -1,5 +1,5 @@
 import { apiClient } from '@/lib/core/api/axios-client';
-import type { AsignacionDiaria, BinTicket, CatAutobus, CatEmpresaCompleta, CatPrioridad, CatReporta, CatRuta, CrearTicketPayload, DispositivoDeAutobus, FallaPorTipo, ListarTicketsParams, ListarTicketsResponse, TecnicoAsignable } from './types';
+import type { AsignacionDiaria, BinTicket, CatAutobus, CatEmpresaCompleta, CatPrioridad, CatReporta, CatRuta, CrearTicketPayload, DiagnosticoPorFalla, DispositivoDeAutobus, FallaPorTipo, ListarTicketsParams, ListarTicketsResponse, TecnicoAsignable } from './types';
 
 
 
@@ -15,7 +15,32 @@ export const ticketsApi = {
     return data;
   },
 
+editar: async (id: string, payload: FormData): Promise<BinTicket> => {
+  const { data } = await apiClient.patch(`/tickets/${id}`, payload, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 
+  return data;
+},
+
+registrarReparacion: async (
+  id: string,
+  payload: FormData,
+): Promise<BinTicket> => {
+  const { data } = await apiClient.patch(
+    `/tickets/${id}/reparacion`,
+    payload,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  );
+
+  return data;
+},
   conteosPorEstado: async (): Promise<Record<string, number>> => {
     const { data } = await apiClient.get('/tickets/conteos-por-estado');
     return data;
@@ -50,6 +75,18 @@ crear: async (payload: CrearTicketPayload): Promise<BinTicket> => {
 export const catalogosCascadaApi = {
   listarAutobuses: async (): Promise<CatAutobus[]> => {
     const { data } = await apiClient.get('/catalogos/autobuses');
+    return data;
+  },
+  listarDiagnosticosPorFalla: async (
+    idFalla: string,
+    ): Promise<DiagnosticoPorFalla[]> => {
+    const { data } = await apiClient.get(
+      '/catalogos/diagnostico/falla',
+      {
+        params: { idFalla },
+      },
+    );
+
     return data;
   },
 

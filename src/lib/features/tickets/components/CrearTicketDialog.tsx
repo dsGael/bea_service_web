@@ -146,7 +146,7 @@ export function CrearTicketDialog() {
         imagenes,
         videos,
       },
-      { onSuccess: () => { setOpen(false); resetForm(); } }
+      { onSuccess: () => { setOpen(false) } }
     );
   };
 
@@ -187,7 +187,7 @@ export function CrearTicketDialog() {
             placeholder="Selecciona un autobús"
             disabled={loadingAutobuses}
           />
-          
+
           <CampoFormulario
             label="Ruta"
             tipo="combobox"

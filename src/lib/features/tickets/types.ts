@@ -218,6 +218,16 @@ export interface TecnicoAsignable {
   activo?: boolean;
   cat_empleados?: { idEmpleado: string; nombre: string } | null;
 }
+export interface DiagnosticoPorFalla {
+  idDiagnostico: string;
+  diagnostico: string | null;
+  reparacion: string | null;
+  fallaNombre: string | null;
+  cat_dispositivo_t?: {
+    idDispositivoT: string;
+    nombre: string | null;
+  };
+}
 
 export interface CatEmpresaCompleta {
   idEmpresa: string;

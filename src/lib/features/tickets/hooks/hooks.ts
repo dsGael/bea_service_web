@@ -117,3 +117,70 @@ export function useConteosPorEstado() {
     staleTime: 60_000, // los conteos no necesitan estar al segundo
   });
 }
+
+export function useEditarTicket() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: string;
+      payload: FormData;
+    }) => ticketsApi.editar(id, payload),
+
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ticketsKeys.detail(variables.id),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ticketsKeys.all,
+      });
+    },
+  });
+}
+
+
+export function useRegistrarReparacion() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: string;
+      payload: FormData;
+    }) => ticketsApi.registrarReparacion(id, payload),
+
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ticketsKeys.detail(variables.id),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ticketsKeys.all,
+      });
+    },
+  });
+}
+
+export function useDiagnosticosPorFalla(
+  idFalla: string | null,
+) {
+  return useQuery({
+    queryKey: [
+      'catalogos',
+      'diagnosticos',
+      'falla',
+      idFalla,
+    ],
+    queryFn: () =>
+      catalogosCascadaApi.listarDiagnosticosPorFalla(
+        idFalla!,
+      ),
+    enabled: !!idFalla,
+  });
+}
