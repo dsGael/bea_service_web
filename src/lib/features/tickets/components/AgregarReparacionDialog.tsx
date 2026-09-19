@@ -99,16 +99,18 @@ export function AgregarReparacionDialog({
     if (!idDiagnostico || !reparacion) {
       return;
     }
-
+    
+    const idDetalle = crypto.randomUUID();
     const formData = new FormData();
-
+    
+    formData.append('idDetalle', idDetalle);
     formData.append(
-      'idDiagnostico',
+      'diagnostico',
       idDiagnostico,
     );
 
     formData.append(
-      'Reparacion',
+      'reparacion',
       reparacion,
     );
 

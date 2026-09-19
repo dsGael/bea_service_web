@@ -198,7 +198,7 @@ export function EditarTicketDialog({
 
     mutate(
       {
-        id: ticket.id,
+        id: ticket.idticket,
         payload: formData,
       },
       {

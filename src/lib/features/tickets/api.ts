@@ -40,8 +40,7 @@ registrarReparacion: async (
   );
 
   return data;
-},
-  conteosPorEstado: async (): Promise<Record<string, number>> => {
+},  conteosPorEstado: async (): Promise<Record<string, number>> => {
     const { data } = await apiClient.get('/tickets/conteos-por-estado');
     return data;
   },
