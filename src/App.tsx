@@ -6,9 +6,9 @@ import { ChecadorPage } from './lib/features/checador/pages/ChecadorPage';
 import { AppLayout } from './lib/core/layout/AppLayout';
 import { SelectCatalogoPage } from './lib/features/catalogos/pages/SelectCatalogoPage';
 import { CatalogoDetailPage } from './lib/features/catalogos/pages/CatalogoDetailPage';
+import { AlmacenPage } from './lib/features/almacen/pages/AlmaecenPage';
 
 // Placeholders — los reemplazas conforme construyas cada módulo
-const AlmacenPage = () => <div className="p-6">Almacen — pendiente</div>;
 const UsuariosPage = () => <div className="p-6">Usuarios — pendiente</div>;
 
 
