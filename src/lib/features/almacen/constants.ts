@@ -1,4 +1,5 @@
 import { Warehouse, ArrowLeftRight, Truck, type LucideIcon } from 'lucide-react';
+import type { DispositivoResumen } from './types';
 
 export interface SubmoduloAlmacen {
   slug: string;
@@ -6,6 +7,14 @@ export interface SubmoduloAlmacen {
   descripcion: string;
   icon: LucideIcon;
 }
+
+export const QUERY_KEYS_ALMACEN = {
+  almacenes: ['almacen', 'almacenes'] as const,
+  movimientos: (filtros?: { idAlmacen?: string; idDispositivo?: string }) =>
+    ['almacen', 'movimientos', filtros] as const,
+  dispositivos: ['almacen', 'dispositivos'] as const, // pendiente confirmar endpoint
+};
+
 
 export const SUBMODULOS_ALMACEN: SubmoduloAlmacen[] = [
   {
@@ -27,3 +36,8 @@ export const SUBMODULOS_ALMACEN: SubmoduloAlmacen[] = [
     icon: Truck,
   },
 ];
+
+
+export function requiereSerieOImei(dispositivo: DispositivoResumen | undefined) {
+  return dispositivo?.requiereSerie ?? false;
+}

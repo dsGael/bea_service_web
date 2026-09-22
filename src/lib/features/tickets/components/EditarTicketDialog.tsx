@@ -31,7 +31,7 @@ import {
   useEditarTicket,
 } from '../hooks/hooks';
 
-import { CampoFormulario } from '../components/CampoFormulario';
+import { CampoFormulario } from '../../../core/forms/CampoFormulario';
 
 interface Props {
   ticket: any;

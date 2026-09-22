@@ -21,7 +21,7 @@ import {
   useCrearTicket,
   useEmpresas,
 } from '../hooks/hooks';
-import { CampoFormulario } from '../components/CampoFormulario';
+import { CampoFormulario } from '../../../core/forms/CampoFormulario';
 
 function ahoraLocalISO() {
   // datetime-local necesita "YYYY-MM-DDTHH:mm", sin zona horaria

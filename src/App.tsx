@@ -7,6 +7,7 @@ import { AppLayout } from './lib/core/layout/AppLayout';
 import { SelectCatalogoPage } from './lib/features/catalogos/pages/SelectCatalogoPage';
 import { CatalogoDetailPage } from './lib/features/catalogos/pages/CatalogoDetailPage';
 import { AlmacenPage } from './lib/features/almacen/pages/AlmaecenPage';
+import { MovimientosListPage } from './lib/features/almacen/components/MovimientosListPage';
 
 // Placeholders — los reemplazas conforme construyas cada módulo
 const UsuariosPage = () => <div className="p-6">Usuarios — pendiente</div>;
@@ -26,6 +27,8 @@ export default function App() {
       <Route path="/tickets/:id" element={<TicketsListPage />} />
       <Route path="/checador" element={<ChecadorPage />} />
       <Route path="/almacen" element={<AlmacenPage />} />
+{/* <Route path="/almacen/almacenes" element={<AlmacenesListPage />} /> */}
+      <Route path="/almacen/movimientos" element={<MovimientosListPage />} />   
       <Route path="/catalogos" element={<SelectCatalogoPage />} />
       <Route path="/catalogos/:slug" element={<CatalogoDetailPage />} />
       <Route path="/catalogos/:slug/:id" element={<CatalogoDetailPage />} />

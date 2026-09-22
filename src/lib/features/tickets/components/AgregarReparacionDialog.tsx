@@ -17,7 +17,7 @@ import {
   useRegistrarReparacion,
 } from '../hooks/hooks';
 
-import { CampoFormulario } from '../components/CampoFormulario';
+import { CampoFormulario } from '../../../core/forms/CampoFormulario';
 
 interface Props {
   ticketId: string;
