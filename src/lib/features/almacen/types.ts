@@ -77,7 +77,25 @@ export interface DispositivoInstancia {
   cat_dispositivo_t: DispositivoResumen | null;
 }
 
+export interface MovimientoResumen {
+  idMovimiento: string;
+  codigo: string;
+  fecha: string;
+  tipoMovimiento: TipoMovimiento;
+  idDispositivo: string | null;
+  cantidad: number;
+  idAlmacenOrigen: string | null;
+  idAlmacenDestino: string | null;
+  numeroSerie: string | null;
+  imei1: string | null;
+  imei2: string | null;
+  comentario: string | null;
+  creadoPor: string | null;
+  fechaCreacion: string;
+  dispositivo: DispositivoResumen | null;
+}
+
 export interface AlmacenDetalle extends Almacen {
   dispositivos: DispositivoInstancia[];
-  movimientos: Movimiento[];
+  movimientos: MovimientoResumen[];
 }

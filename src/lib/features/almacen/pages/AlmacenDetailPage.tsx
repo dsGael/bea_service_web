@@ -4,7 +4,8 @@ import { ArrowLeft } from 'lucide-react';
 import { useAlmacen, useActualizarAlmacen } from '../hooks/hooks';
 import { CampoFormulario } from '@/lib/core/forms/CampoFormulario';
 import { Button } from '@/components/ui/button';
-import { MovimientosTable } from '../components/MovimientosTable';
+import { MovimientosResumenTable } from '../components/MovimientosResumenTable';
+
 import {
   Table, TableHeader, TableBody, TableRow, TableHead, TableCell,
 } from '@/components/ui/table';
@@ -63,10 +64,10 @@ export function AlmacenDetailPage() {
         </Table>
       </div>
 
-      <div>
-        <h2 className="mb-3 text-lg font-semibold">Últimos movimientos</h2>
-        <MovimientosTable movimientos={almacen.movimientos} />
-      </div>
+        <div>
+            <h2 className="mb-3 text-lg font-semibold">Últimos movimientos</h2>
+            <MovimientosResumenTable movimientos={almacen.movimientos} />
+        </div>
     </div>
   );
 }
