@@ -5,9 +5,12 @@ import {
   registrarMovimiento,
   consultarExistencia,
   listarDispositivos,
+  obtenerAlmacen,
+  crearAlmacen,
+  actualizarAlmacen,
 } from '../api';
-import { QUERY_KEYS_ALMACEN } from '../constants';
-import type { RegistrarMovimientoPayload } from '../types';
+import { QUERY_KEYS_ALMACEN, QUERY_KEYS_ALMACEN_DETALLE } from '../constants';
+import type { ActualizarAlmacenPayload, RegistrarMovimientoPayload } from '../types';
 
 export function useAlmacenes() {
   return useQuery({
@@ -46,6 +49,35 @@ export function useRegistrarMovimiento() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['almacen', 'movimientos'] });
       queryClient.invalidateQueries({ queryKey: ['almacen', 'existencia'] });
+    },
+  });
+}
+
+export function useAlmacen(id: string) {
+  return useQuery({
+    queryKey: QUERY_KEYS_ALMACEN_DETALLE(id),
+    queryFn: () => obtenerAlmacen(id),
+    enabled: Boolean(id),
+  });
+}
+
+export function useCrearAlmacen() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: crearAlmacen,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS_ALMACEN.almacenes });
+    },
+  });
+}
+
+export function useActualizarAlmacen(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: ActualizarAlmacenPayload) => actualizarAlmacen(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS_ALMACEN.almacenes });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS_ALMACEN_DETALLE(id) });
     },
   });
 }

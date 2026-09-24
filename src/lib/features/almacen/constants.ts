@@ -15,6 +15,8 @@ export const QUERY_KEYS_ALMACEN = {
   dispositivos: ['almacen', 'dispositivos'] as const, // pendiente confirmar endpoint
 };
 
+export const QUERY_KEYS_ALMACEN_DETALLE = (id: string) => ['almacen', 'detalle', id] as const;
+
 
 export const SUBMODULOS_ALMACEN: SubmoduloAlmacen[] = [
   {

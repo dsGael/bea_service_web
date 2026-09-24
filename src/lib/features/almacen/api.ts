@@ -6,6 +6,7 @@ import type {
   Movimiento,
   RegistrarMovimientoPayload,
   DispositivoResumen,
+  AlmacenDetalle,
 } from './types';
 
 export async function listarAlmacenes() {
@@ -13,10 +14,7 @@ export async function listarAlmacenes() {
   return data;
 }
 
-export async function obtenerAlmacen(id: string) {
-  const { data } = await apiClient.get<Almacen>(`/almacen/${id}`);
-  return data;
-}
+
 
 export async function crearAlmacen(payload: CrearAlmacenPayload) {
   const { data } = await apiClient.post<Almacen>('/almacen', payload);
@@ -52,5 +50,10 @@ export async function consultarExistencia(idAlmacen: string, idDispositivo: stri
 
 export async function listarDispositivos() {
   const { data } = await apiClient.get<DispositivoResumen[]>('/catalogos/tipos-dispositivos');
+  return data;
+}
+
+export async function obtenerAlmacen(id: string) {
+  const { data } = await apiClient.get<AlmacenDetalle>(`/almacen/${id}`);
   return data;
 }

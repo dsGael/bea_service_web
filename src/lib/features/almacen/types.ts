@@ -65,3 +65,19 @@ export interface CrearAlmacenPayload {
 }
 
 export type ActualizarAlmacenPayload = Partial<CrearAlmacenPayload>;
+
+export interface DispositivoInstancia {
+  idDispositivo: string;
+  numeroSerie: string | null;
+  imei1: string | null;
+  imei2: string | null;
+  idAutobus: string | null;
+  fechaInstalacion: string | null;
+  comentarios: string | null;
+  cat_dispositivo_t: DispositivoResumen | null;
+}
+
+export interface AlmacenDetalle extends Almacen {
+  dispositivos: DispositivoInstancia[];
+  movimientos: Movimiento[];
+}
